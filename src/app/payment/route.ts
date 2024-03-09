@@ -12,18 +12,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json().then((data) => data as {data: {id: string}});
   
     const payment = await new Payment(mercadopago).get({id: body.data.id});
-    
-    console.log("payment:", payment);
 
-    console.log("payment.items:", payment.additional_info.items);
+    console.log("payment:", payment);
+    
+    //console.log("payment.items.quantity:", payment.additional_info.items);
+    //console.log("payment.items.quantity:", payment.additional_info.items.quantity);
 
     const compra = {
         id: payment.id,
         cantidad: payment.additional_info.items.quantity, // Accede a la cantidad del primer ítem
         nombre: payment.additional_info.payer.first_name, // Accede al nombre del pagador
         apellido: payment.additional_info.payer.last_name, // Accede al apellido del pagador
-        //documento: payment.additional_info.payer.identification.number,
+        documento: payment.card.cardholder.identification.number,
     };
+
     
     console.log("compra:", compra)
   
